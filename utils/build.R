@@ -44,12 +44,15 @@ clear_script_objects()
 
 message("Generating data dictionary...")
 
+# Set filename based on config (like export_based_on_config.R)
+dict_file_name <- paste0("data_dictionary_", config::get("metadata_institution_name"), ".html")
+
 # Render Quarto document and move to export directory
 # Note: output_file only accepts filename, not path (Quarto CLI limitation)
 quarto::quarto_render(input = "04_export/data_dictionary.qmd")
 file.rename(
   "04_export/data_dictionary.html",
-  "data/04_exported/data_dictionary.html"
+  paste0("data/04_exported/", dict_file_name)
 )
 
-message("Data dictionary generated: data/04_exported/data_dictionary.html")
+message(paste0("Data dictionary generated: data/04_exported/", dict_file_name))

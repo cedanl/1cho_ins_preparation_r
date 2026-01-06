@@ -15,6 +15,7 @@ execute:
 
 ```{r setup}
 # Load required packages for data dictionary
+library(config)
 library(fst)
 library(dplyr)
 library(purrr)
@@ -23,6 +24,9 @@ library(tibble)
 library(reactable)
 library(htmltools)
 library(base64enc)
+
+# Get institution name for display
+institution_name <- config::get("metadata_institution_name")
 ```
 
 ```{r load-data}
@@ -128,7 +132,7 @@ stats <- stats |>
 
 ## Overzicht
 
-Dit document bevat een overzicht van alle **`r nrow(stats)`** variabelen in de 1CHO dataset.
+Dit document bevat een overzicht van alle **`r nrow(stats)`** variabelen in de 1CHO dataset voor **`r institution_name`**.
 
 ::: {.callout-note appearance="simple"}
 **Verdeling:** INS_ (`r sum(stats$Prefix == "INS", na.rm = TRUE)`) | OPL_ (`r sum(stats$Prefix == "OPL", na.rm = TRUE)`) | DEM_ (`r sum(stats$Prefix == "DEM", na.rm = TRUE)`) | SUC_ (`r sum(stats$Prefix == "SUC", na.rm = TRUE)`) | Overig (`r sum(!stats$Prefix %in% c("INS", "OPL", "DEM", "SUC"), na.rm = TRUE)`)
