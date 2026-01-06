@@ -47,6 +47,17 @@ packages_cran <- c(
   "vvconverter"
 )
 
+# Packages for data dictionary generation (installed via renv but loaded only when needed)
+packages_data_dictionary <- c(
+  "quarto",         # Render Quarto documents (called via quarto::)
+  "reactable",      # Create interactive tables for data dictionary
+  "reactablefmtr",  # Format reactable tables (sparklines, bars)
+  "sparkline",      # Inline sparkline charts
+  "htmltools",      # HTML widget support
+  "base64enc",      # Encode images as base64 for inline plots
+  "ggplot2"         # Create plots for data dictionary
+)
+
 packages_github <- c(
   "vusa"            # Utilise packages from the VU team
 )
@@ -61,7 +72,7 @@ packages_github <- c(
 # Combine packages
 packages <- c(packages_base, packages_cran, packages_github)
 packages <- packages[packages != "config"]
-packages_renv <- c(packages_cran, packages_github)
+packages_renv <- c(packages_cran, packages_data_dictionary, packages_github)
 
 
 ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++

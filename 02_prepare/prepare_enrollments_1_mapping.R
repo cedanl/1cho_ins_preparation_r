@@ -58,12 +58,15 @@ enrollments <- enrollments %>%
     INS_Hoogste_vooropleiding_code_1CHO = replace_na(INS_Hoogste_vooropleiding_code_1CHO, 0)
   )
 
+# Zero-pad binnen_HO codes for _naam mapping (expects 5-digit codes like "00607")
 enrollments <- enrollments %>%
+  mutate(INS_Vooropleiding_binnen_HO_code_padded = sprintf("%05d", as.integer(INS_Vooropleiding_binnen_HO_code))) %>%
   mapping_translate(
-    "INS_Vooropleiding_binnen_HO_code",
+    "INS_Vooropleiding_binnen_HO_code_padded",
     "INS_Vooropleiding_binnen_HO_sector",
     mapping_table_name = "Mapping_INS_Vooropleiding_code_INS_Vooropleiding_naam"
-  )
+  ) %>%
+  select(-INS_Vooropleiding_binnen_HO_code_padded)
 
 enrollments <- enrollments %>%
   mutate(INS_Hoogste_vooropleiding_code_1CHO = as.numeric(INS_Hoogste_vooropleiding_code_1CHO)) %>%
@@ -80,12 +83,15 @@ enrollments <- enrollments %>%
     mapping_table_name = "Mapping_INS_Vooropleiding_code_INS_Vooropleiding_naam"
   )
 
+# Convert to numeric for _cat mapping (strips leading zeros: "00174" -> 174)
 enrollments <- enrollments %>%
+  mutate(INS_Vooropleiding_voor_HO_code_numeric = as.numeric(INS_Vooropleiding_voor_HO_code)) %>%
   mapping_translate(
-    "INS_Vooropleiding_voor_HO_code",
+    "INS_Vooropleiding_voor_HO_code_numeric",
     "INS_Vooropleiding_voor_HO_omschrijving",
     mapping_table_name = "Mapping_INS_Vooropleiding_code_INS_Vooropleiding_cat"
-  )
+  ) %>%
+  select(-INS_Vooropleiding_voor_HO_code_numeric)
 
 
 enrollments <- enrollments %>%
