@@ -259,8 +259,8 @@ enrollments <- mapping_translate(
 
 enrollments <- mapping_translate(
   enrollments,
-  "INS_Opleidingsvorm_naam",
-  "INS_Opleidingsvorm_code"
+  "INS_Opleidingsvorm_code",
+  "INS_Opleidingsvorm_naam"
 )
 
 enrollments <- mapping_category(

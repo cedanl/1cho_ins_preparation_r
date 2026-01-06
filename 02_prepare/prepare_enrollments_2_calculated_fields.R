@@ -58,11 +58,15 @@ enrollments <- enrollments %>%
 enrollments <- enrollments %>%
   mutate(
     # First we remove some prefixes from this variable:
+    # Updated patterns to handle both old format (e.g. "vwo profiel") and
+    # new format from Dec_vooropl.asc (e.g. "VO havo profiel")
     INS_Vooropleiding_voor_HO_profiel_standaard =
       str_replace_all(
         INS_Vooropleiding_voor_HO_profiel,
-        c("vwo profiel |havo |algemeen|havo profiel |profiel "),
-        ""
+        c("VO " = "", "vwo profiel " = "", "havo profiel " = "",
+          "havo " = "", "algemeen" = "", "profiel " = "",
+          # Convert "en" to "&" and "+" to "&" for mapping table compatibility
+          " en " = " & ", " \\+ " = " & ")
       ),
     # Then we check if the known profiles appear, and otherwise we add
     # a missing value at this point.
@@ -136,22 +140,22 @@ vProfielen_genegeerd <- c("NG & CM",
 
 enrollments <- enrollments %>%
   mutate(
-    # Variable for VWO and HAVO
+    # Variable for VWO and HAVO - use abbreviations (_afk) for factor levels
     INS_Vooropleiding_voor_HO_profiel_standaard_zonder_combinatie = if_else(
-      INS_Vooropleiding_voor_HO_profiel_standaard %in% vProfielen_genegeerd,
+      INS_Vooropleiding_voor_HO_profiel_standaard_afk %in% vProfielen_genegeerd,
       NA_character_,
-      INS_Vooropleiding_voor_HO_profiel_standaard
+      INS_Vooropleiding_voor_HO_profiel_standaard_afk
     ),
     # Make factor
     INS_Vooropleiding_voor_HO_profiel_standaard_zonder_combinatie = factor(
       INS_Vooropleiding_voor_HO_profiel_standaard_zonder_combinatie,
       levels = vProfielen_levels
     ),
-    # Variable only VWO
+    # Variable only VWO - use abbreviations (_afk) for factor levels
     INS_Vooropleiding_voor_HO_profiel_standaard_alleen_VWO_zonder_combinatie = if_else(
-      INS_Vooropleiding_voor_HO_profiel_standaard_alleen_VWO %in% vProfielen_genegeerd,
+      INS_Vooropleiding_voor_HO_profiel_standaard_alleen_VWO_afk %in% vProfielen_genegeerd,
       NA_character_,
-      INS_Vooropleiding_voor_HO_profiel_standaard_alleen_VWO
+      INS_Vooropleiding_voor_HO_profiel_standaard_alleen_VWO_afk
     ),
     # Make factor
     INS_Vooropleiding_voor_HO_profiel_standaard_alleen_VWO_zonder_combinatie = factor(

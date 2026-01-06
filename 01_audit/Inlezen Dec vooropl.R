@@ -1,5 +1,5 @@
 ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-## Inlezen Dec vopl.R
+## Inlezen Dec vooropl.R
 ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 ## R code voor Student Analytics Vrije Universiteit Amsterdam
 ## Copyright 2021 VU
@@ -7,12 +7,12 @@
 ## Contact: vu-analytics@vu.nl
 ## Verspreiding buiten de VU: Ja
 ##
-## Doel: In dit script wordt het Dec_vopl.asc omgezet naar RDS en worden
-## de kolomnamen omgezet
+## Doel: In dit script wordt het Dec_vooropl.asc omgezet naar RDS en worden
+## de kolomnamen omgezet. Dit bestand bevat de uitgebreide vooropleidingscodes.
 ##
 ## Afhankelijkheden: Index.R
 ##
-## Datasets: /1cHO/2020/LEESMIJ en reerentietabellen/Dec_vopl.asc
+## Datasets: /1cHO/2020/LEESMIJ en reerentietabellen/Dec_vooropl.asc
 ##
 ## Opmerkingen:
 ## 1) Geen
@@ -25,12 +25,12 @@
 
 ## Lees alle benodigde bestanden in:
 Bestandspad <- paste0(
-  config::get("metadata_1cho_decoding_files_dir"), "Dec_vopl.asc"
+  config::get("metadata_1cho_decoding_files_dir"), "Dec_vooropl.asc"
 )
 
-Dec_vopl <- read_fwf(Bestandspad,
-                     fwf_widths(c(5, 200)),
-                     locale = locale(encoding = "windows-1252"))
+Dec_vooropl <- read_fwf(Bestandspad,
+                        fwf_widths(c(5, 200)),
+                        locale = locale(encoding = "windows-1252"))
 
 ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 ## 2. BEWERKEN ####
@@ -38,7 +38,7 @@ Dec_vopl <- read_fwf(Bestandspad,
 ## Bestandsbeschrijving_Dec-bestanden.txt bevat uitleg voor de inhoud van de kolommen
 
 ## Splits kolom X1 in 2 kolommen en geef de juiste kolomnamen
-Dec_vopl <- Dec_vopl %>%
+Dec_vooropl <- Dec_vooropl %>%
   ## Verwijderen van accenten
   mutate(across(
     everything(),
@@ -55,7 +55,7 @@ Dec_vopl <- Dec_vopl %>%
 ## BEWAAR & RUIM OP ####
 ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-write_file_proj(Dec_vopl,
+write_file_proj(Dec_vooropl,
                 name = "Mapping_INS_Vooropleiding_code_INS_Vooropleiding_naam",
                 full_dir = Sys.getenv("MAP_TABLE_DIR"),
                 extensions = "csv")

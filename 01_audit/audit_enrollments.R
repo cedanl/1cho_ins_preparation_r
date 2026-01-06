@@ -12,11 +12,12 @@
 ## 1. READ ####
 ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-enrollments <- read_csv(config::get("data_1cho_enrollments_file_path"),
-                        col_types = cols(
-                          .default = col_guess(),
-                          `Nationaliteit3` = col_double(),
-                          `DatumInschrijving` = col_date(format = "%Y-%m-%d")))
+enrollments <- read_delim(config::get("data_1cho_enrollments_file_path"),
+                          delim = ";",
+                          col_types = cols(
+                            .default = col_guess(),
+                            `nationaliteit_3` = col_double(),
+                            `datum_inschrijving` = col_date(format = "%Y%m%d")))
 
 enrollments_naming <- read_documentation("Documentatie_enrollments.csv")
 
