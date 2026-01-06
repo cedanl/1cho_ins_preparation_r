@@ -11,7 +11,7 @@ default:
   metadata_institution_name: "synthetic"
   metadata_institution_BRIN: "21XX"
 
-  data_1cho_enrollments_file_name: "EV299XX24.csv"
+  data_1cho_enrollments_file_name: "EV299XX24_1cijferho_main_export_synthetic.csv"
   data_1cho_enrollments_file_path: !expr file.path("data/00_raw", year, data_1cho_enrollments_file_name)
 
   # If you change this add the tables to /metatada/mapping_tables
