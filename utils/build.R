@@ -27,8 +27,7 @@ script_validation <- tribble(
 ## Read the Script validation data in
 ##' *Note*: All scripts are run here, it takes a long time
 script_validation <- script_validation %>%
-  mutate(validation_df = map_dfr(script, safely(~ vusa::validate_script_proj(.x, TRUE)))) %>%
-  unnest_wider(validation_df) %>%
-  unnest_wider(result)
+  mutate(validation_result = map(script, possibly(~ vusa::validate_script_proj(.x, TRUE), otherwise = NULL))) %>%
+  mutate(validation_success = map_lgl(validation_result, ~ !is.null(.x)))
 
 clear_script_objects()
