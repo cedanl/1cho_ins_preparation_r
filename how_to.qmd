@@ -22,7 +22,7 @@ For more information about renv, see their [documentation](https://rstudio.githu
 if (!require("renv")) {
   install.packages("renv")
   renv::init()
-} 
+}
 ```
 
 #### 0.2. Prepare project environment
