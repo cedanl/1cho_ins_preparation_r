@@ -1,5 +1,5 @@
 ---
-title: "1CHO Data dictionary na pipeline"
+title: "1CHO Data Dictionary"
 subtitle: "Variabelen overzicht - Automatisch gegenereerd"
 format:
   html:
@@ -11,12 +11,15 @@ execute:
   echo: false
   warning: false
   message: false
+params:
+  type: "end"
 ---
 
 ```{r setup}
 # Load required packages for data dictionary
 library(config)
 library(fst)
+library(readr)
 library(dplyr)
 library(purrr)
 library(stringr)
@@ -27,27 +30,39 @@ library(base64enc)
 
 # Get institution name for display
 institution_name <- config::get("metadata_institution_name")
+data_type <- params$type
 ```
 
 ```{r load-data}
-# Load final output data (try rds format first, then fst)
-# Paths relative to project root (04_export/ is one level down)
-data_path_rds <- "../data/03_combined/enrollments.rds"
-data_path_fst <- "../data/03_combined/prepared_enrollments.fst"
-
-if (file.exists(data_path_rds)) {
-  df <- readRDS(data_path_rds)
-} else if (file.exists(data_path_fst)) {
-  df <- fst::read_fst(data_path_fst)
+# Conditional data loading based on params$type
+if (data_type == "source") {
+  # Load raw source data
+  source_file <- config::get("data_1cho_enrollments_file_path")
+  df <- readr::read_delim(source_file, delim = ";", show_col_types = FALSE)
+  data_description <- paste("Bronbestand:", basename(source_file))
+  # All variables are from source
+  original_vars <- names(df)
 } else {
-  stop("No data file found in data/03_combined/")
-}
+  # Load prepared data (end of pipeline)
+  # Paths relative to project root (execute_dir = getwd() in render function)
+  data_path_rds <- "data/03_combined/enrollments.rds"
+  data_path_fst <- "data/03_combined/prepared_enrollments.fst"
 
-# Load source metadata (contains original variables from 1CHO)
-source_metadata <- read.csv2(
-  "../metadata/assertions/Documentatie_enrollments.csv"
-)
-original_vars <- source_metadata$Veldnaam
+  if (file.exists(data_path_rds)) {
+    df <- readRDS(data_path_rds)
+  } else if (file.exists(data_path_fst)) {
+    df <- fst::read_fst(data_path_fst)
+  } else {
+    stop("No data file found in data/03_combined/")
+  }
+  data_description <- "Prepared data na pipeline"
+
+  # Load source metadata (contains original variables from 1CHO)
+  source_metadata <- read.csv2(
+    "metadata/assertions/Documentatie_enrollments.csv"
+  )
+  original_vars <- source_metadata$Veldnaam
+}
 ```
 
 ```{r compute-statistics}
@@ -120,24 +135,28 @@ stats <- map_dfr(names(df), function(col) {
   )
 })
 
-# Add descriptions from source metadata where available
-stats <- stats |>
-  left_join(
-    source_metadata |>
-      select(Veldnaam, Veldnaam_export) |>
-      distinct(),
-    by = "Veldnaam"
-  )
+# Add descriptions from source metadata where available (only for end-of-pipeline)
+if (data_type == "end") {
+  stats <- stats |>
+    left_join(
+      source_metadata |>
+        select(Veldnaam, Veldnaam_export) |>
+        distinct(),
+      by = "Veldnaam"
+    )
+}
 ```
 
-## Overzicht
+## Overzicht `r if(data_type == "source") "- Bronbestand" else "- Na pipeline"`
 
 Dit document bevat een overzicht van alle **`r nrow(stats)`** variabelen in de 1CHO dataset voor **`r institution_name`**.
 
 ::: {.callout-note appearance="simple"}
+**Data:** `r data_description`
+
 **Verdeling:** INS_ (`r sum(stats$Prefix == "INS", na.rm = TRUE)`) | OPL_ (`r sum(stats$Prefix == "OPL", na.rm = TRUE)`) | DEM_ (`r sum(stats$Prefix == "DEM", na.rm = TRUE)`) | SUC_ (`r sum(stats$Prefix == "SUC", na.rm = TRUE)`) | Overig (`r sum(!stats$Prefix %in% c("INS", "OPL", "DEM", "SUC"), na.rm = TRUE)`)
 
-**Herkomst:** Bron (1CHO): `r sum(stats$Herkomst == "Bron")` | Toegevoegd (pipeline): `r sum(stats$Herkomst == "Toegevoegd")`
+`r if(data_type == "end") paste0("**Herkomst:** Bron (1CHO): ", sum(stats$Herkomst == "Bron"), " | Toegevoegd (pipeline): ", sum(stats$Herkomst == "Toegevoegd"))`
 
 **Observaties:** `r format(nrow(df), big.mark = ".")` | **Gegenereerd:** `r format(Sys.time(), "%Y-%m-%d %H:%M")`
 :::
