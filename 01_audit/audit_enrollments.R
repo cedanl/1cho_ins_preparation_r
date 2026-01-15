@@ -13,7 +13,7 @@
 ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 enrollments <- read_delim(config::get("data_1cho_enrollments_file_path"),
-                          delim = ";",
+                          delim = ",",
                           col_types = cols(
                             .default = col_guess(),
                             `nationaliteit_3` = col_double(),
@@ -24,7 +24,7 @@ enrollments <- read_delim(config::get("data_1cho_enrollments_file_path"),
                             `hoogste_vooropleiding_binnen_het_ho_oorspronkelijke_code` = col_character(),
                             `hoogste_vooropleiding` = col_character()))
 
-enrollments_naming <- read_documentation("Documentatie_enrollments.csv")
+enrollments_naming <- read_documentation("Documentatie_enrollments_avans_feature_requests.csv")
 
 
 ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
