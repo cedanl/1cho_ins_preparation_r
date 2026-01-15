@@ -5,4 +5,13 @@ Sys.setenv(
   RENV_PATHS_LOCKFILE = file.path("utils/proj_settings/renv.lock")
 )
 source("utils/renv/activate.R")
-source("utils/00_set_up_environment.R")
+
+# --- SETUP INSTRUCTIONS ---
+if (interactive() && file.exists("utils/00_setup.R")) {
+  # 1. Print the visual message (Safe in all IDEs)
+  message("\n", rep("-", 60))
+  message("🚀  Setup script detected: 'utils/00_setup.R'")
+  message("👉  To initialize your environment, run:")
+  message("\n    source(\"utils/00_setup.R\")\n")
+  message(rep("-", 60))
+}
