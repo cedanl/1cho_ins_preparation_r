@@ -53,3 +53,4 @@ rsconnect/
 !*synthetic.zip
 *.rds
 !*synthetic.rds
+metadata/data_dictionary_*/stats_*.csv

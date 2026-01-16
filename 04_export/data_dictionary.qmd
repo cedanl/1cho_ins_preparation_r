@@ -34,11 +34,20 @@ data_type <- params$type
 ```
 
 ```{r load-data}
+# Helper function to detect delimiter
+detect_csv_delimiter <- function(file_path) {
+  first_line <- readLines(file_path, n = 1, warn = FALSE)
+  comma_count <- str_count(first_line, ",")
+  semicolon_count <- str_count(first_line, ";")
+  if (comma_count > semicolon_count) "," else ";"
+}
+
 # Conditional data loading based on params$type
 if (data_type == "source") {
   # Load raw source data
   source_file <- config::get("data_1cho_enrollments_file_path")
-  df <- readr::read_delim(source_file, delim = ";", show_col_types = FALSE)
+  delim <- detect_csv_delimiter(source_file)
+  df <- readr::read_delim(source_file, delim = delim, show_col_types = FALSE)
   data_description <- paste("Bronbestand:", basename(source_file))
   # All variables are from source
   original_vars <- names(df)

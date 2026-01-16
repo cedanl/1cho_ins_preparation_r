@@ -10,6 +10,17 @@
 
 source("utils/00_set_up_environment.R")
 
+## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+## GENERATE SOURCE DATA DICTIONARY ####
+## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+source("utils/dev/render_data_dictionary.R")
+render_data_dictionary(type = "source", check_changed = TRUE)
+
+## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+## RUN PIPELINE ####
+## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
 folders_to_run <- write_config_proj() %>%
   pull(script_dir)
 
@@ -39,8 +50,7 @@ clear_script_objects()
 
 
 ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-## GENERATE DATA DICTIONARY ####
+## GENERATE END DATA DICTIONARY ####
 ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-source("utils/dev/render_data_dictionary.R")
 render_data_dictionary(type = "end")
