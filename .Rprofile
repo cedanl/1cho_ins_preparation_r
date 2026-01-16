@@ -7,11 +7,11 @@ Sys.setenv(
 source("utils/renv/activate.R")
 
 # --- SETUP INSTRUCTIONS ---
-if (interactive() && file.exists("utils/00_setup.R")) {
+if (interactive() && file.exists("utils/00_set_up_environment.R")) {
   # 1. Print the visual message (Safe in all IDEs)
   message("\n", rep("-", 60))
-  message("🚀  Setup script detected: 'utils/00_setup.R'")
+  message("🚀  Setup script detected: 'utils/00_setup_environment.R'")
   message("👉  To initialize your environment, run:")
-  message("\n    source(\"utils/00_setup.R\")\n")
+  message("\n    source(\"utils/00_setup_environment.R\")\n")
   message(rep("-", 60))
 }
